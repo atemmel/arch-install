@@ -8,9 +8,11 @@ loadkeys i386/qwerty/sv-latin1.map.gz
 
 Check internet status:
 
+```
 ping google.com
+```
 
-If the ping is successful, you may proceed. If you need a wireless connection, use networkmanager for the time being
+If the ping is successful, you may proceed. If you need a wireless connection, use `networkmanager` for the time being
 
 Check drives:
 
@@ -43,7 +45,7 @@ lsblk
 
 Create file systems:
 
-```
+```sh
 mkfs.ext4 /dev/sdxy
 ```
 
@@ -62,7 +64,7 @@ mount /dev/sdxy /mnt
 ```
 
 Run installation script:
-```
+```sh
 pacstrap -i /mnt base base-devel
 ```
 
@@ -103,7 +105,7 @@ Then generate them:
 locale-gen
 ```
 Set your primary language:
-```
+```sh
 echo LANG=en_GB.UTF8 > /etc/locale.conf
 export LANG=en_GB.UTF8
 ```
@@ -138,7 +140,7 @@ Set hardware clock to system time:
 hwclock --systohc
 ```
 Set hostname:
-```
+```sh
 echo Hostname > etc/hostname
 ```
 Edit hosts:
@@ -215,7 +217,7 @@ This is because you ran grub from `chroot`.
 Once again, no need to worry.
 
 Now shutdown the pc:
-```
+```sh
 umount /dev/sdxy
 exit
 shutdown -P now
@@ -251,7 +253,7 @@ Uncomment the line that looks like:
 This allows all members of the wheel group to use all commands.
 
 Now logout from the root account:
-```
+```sh
 exit
 ```
 Login with your new user, if you can run the following line everything works as intended:
@@ -290,7 +292,7 @@ sudo pacman -S xf86-video-vesa
 Also install `xf86-video-intel` and `xf86-video-nouveau` if applicable.
 
 Download and install fonts:
-```
+```sh
 # Enable bitmap fonts:
 sudo rm /etc/fonts/conf.d/10*
 
@@ -315,20 +317,6 @@ Install more software:
 aurman -S python-pywal flameshot polybar pyenv
 ```
 
-Enter X:
-```
-startx
-```
-
-Set keyboard layout:
-```
-# Try out a layout:
-setxkbmap -model pc104 -layout se
-# Set consistent layout:
-localectl --no-convert set-x11-keymap se pc104
-```
-
-
 Install `discord`:
 ```
 aurman -S discord
@@ -348,5 +336,19 @@ rm -rf libc++
 # Now try installing it again:
 aurman -S discord
 ```
+
+Enter X:
+```
+startx
+```
+
+Set keyboard layout:
+```sh
+# Try out a layout:
+setxkbmap -model pc104 -layout se
+# Set consistent layout:
+localectl --no-convert set-x11-keymap se pc104
+```
+
 
 ### Todo: urxvt resize font
