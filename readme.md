@@ -353,10 +353,13 @@ setxkbmap -model pc104 -layout se
 localectl --no-convert set-x11-keymap se pc104
 ```
 
-# Chromium fonts
+### Chromium fonts
 Standard: Hack (Hack Nerd Font)
+
 Serif: Times New Roman
+
 Sans-serif: Arial
+
 Fixed-width: Monospace
 
 
