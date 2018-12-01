@@ -87,7 +87,7 @@ Your prompt should now look a bit different.
 
 Install vim with added bloat, completion for bash, and finally, git:
 ```
-pacman -S neovim bash-completition git
+pacman -S neovim bash-completion git
 ```
 
 Enable your locale(s) of choice:
@@ -106,17 +106,17 @@ locale-gen
 ```
 Set your primary language:
 ```sh
-echo LANG=en_GB.UTF8 > /etc/locale.conf
+echo LANG=en_GB.UTF8 > /etc/locale.cfg
 export LANG=en_GB.UTF8
 ```
 
 Find your language code:
 ```
-find /usr/share/kbd/keymaps/ type f
+find /usr/share/kbd/keymaps/
 ```
 Alternatively, if you know what to look for:
 ```
-find /usr/share/kbd/keymaps/ type f | grep "sv"
+find /usr/share/kbd/keymaps/ | grep "sv"
 ```
 Make a mental note of it, and open vconsole.conf:
 ```
@@ -273,7 +273,7 @@ rm -rf .git dotfiles
 
 Install basic software:
 ```
-sudo pacman -S i3-gaps rofi xorg xorg-xinit rxvt-unicode compton dunst mpd ncmpcpp ranger neofetch youtube-dl
+sudo pacman -S i3-gaps rofi xorg xorg-xinit rxvt-unicode compton dunst mpd ncmpcpp ranger neofetch youtube-dl w3m feh imlib2 pulseaudio pavucontrol
 ```
 
 Download and install `aurman` so we can install more software:
@@ -302,6 +302,9 @@ git clone https://github.com/NerdyPepper/scientifica.git
 cp scientifica/regular/scientifica-11.bdf  .local/share/fonts/
 cp scientifica/bold/scientificaBold-11.bdf .local/share/fonts/
 
+# Download generic fonts
+aurman -S ttf-ms-fonts
+
 # Rebuild font cache:
 fc-cache
 # Check that it is installed with:
@@ -314,7 +317,7 @@ aurman -S nerd-fonts-complete
 
 Install more software:
 ```
-aurman -S python-pywal flameshot polybar pyenv
+aurman -S python-pywal flameshot polybar pyenv unclutter-xfixes-git
 ```
 
 Install `discord`:
@@ -349,6 +352,12 @@ setxkbmap -model pc104 -layout se
 # Set consistent layout:
 localectl --no-convert set-x11-keymap se pc104
 ```
+
+# Chromium fonts
+Standard: Hack (Hack Nerd Font)
+Serif: Times New Roman
+Sans-serif: Arial
+Fixed-width: Monospace
 
 
 ### Todo: urxvt resize font
