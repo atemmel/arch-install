@@ -264,16 +264,17 @@ sudo pacman -Syyu
 From here, you'll want to import your dots:
 ```sh
 git clone https://github.com/atemmel/dotfiles.git
+git submodule update --init --recursive
 
 # Copy the contents:
-cp -R dotfiles/. .
+cp -r dotfiles/. .
 # Clean up:
 rm -rf .git dotfiles
 ```
 
 Install basic software:
 ```
-sudo pacman -S i3-gaps rofi xorg xorg-xinit rxvt-unicode compton dunst mpd ncmpcpp ranger neofetch youtube-dl w3m feh imlib2 pulseaudio pavucontrol
+sudo pacman -S i3-gaps rofi xorg xorg-xinit rxvt-unicode compton dunst mpd ncmpcpp ranger neofetch youtube-dl w3m feh imlib2 pulseaudio pavucontrol python-neovim
 ```
 
 Download and install `aurman` so we can install more software:
