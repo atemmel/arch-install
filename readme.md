@@ -293,7 +293,7 @@ sudo pacman -S xf86-video-vesa
 # If applicable
 sudo pacman -S xf86-video-intel
 sudo pacman -S nvidia
-sudo nvidia-config
+sudo nvidia-xconfig
 ```
 
 Download and install fonts:
