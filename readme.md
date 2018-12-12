@@ -274,7 +274,7 @@ rm -rf .git dotfiles
 
 Install basic software:
 ```
-sudo pacman -S i3-gaps rofi xorg xorg-xinit rxvt-unicode compton dunst mpd ncmpcpp ranger neofetch youtube-dl w3m feh imlib2 pulseaudio pavucontrol python-neovim
+sudo pacman -S i3-gaps rofi xorg xorg-xinit rxvt-unicode compton dunst mpd ncmpcpp ranger neofetch youtube-dl w3m feh imlib2 pulseaudio pavucontrol python-neovim zip unzip unrar firefox zathura valgrind
 ```
 
 Download and install `aurman` so we can install more software:
@@ -289,8 +289,12 @@ cd ../;rm -rf aurman
 Install graphics drivers: (vesa should be installed by default)
 ```
 sudo pacman -S xf86-video-vesa
+
+# If applicable
+sudo pacman -S xf86-video-intel
+sudo pacman -S nvidia
+sudo nvidia-config
 ```
-Also install `xf86-video-intel` and `xf86-video-nouveau` if applicable.
 
 Download and install fonts:
 ```sh
