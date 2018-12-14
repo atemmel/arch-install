@@ -210,7 +210,7 @@ If you recieve 'Installation finished. No error reported.' you're golden.
 
 Create grub config:
 ```
-grub-mkconfig -o /boot/grub/grub.conf
+grub-mkconfig -o /boot/grub/grub.cfg
 ```
 Here you'll get a warning `'Failed to connect to lvmetad'`.
 This is because you ran grub from `chroot`.
