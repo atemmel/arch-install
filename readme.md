@@ -358,6 +358,17 @@ setxkbmap -model pc104 -layout se
 localectl --no-convert set-x11-keymap se pc104
 ```
 
+### Optional: Startx on startup
+Open `/etc/profile`
+then append the following to the end of the file:
+
+```sh
+# Autostart systemd default session on tty1
+if [[ "$(tty)" == '/dev/tty1' ]] then
+	exec startx
+fi
+```
+
 ### Chromium fonts
 Standard: Hack (Hack Nerd Font)
 
