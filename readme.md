@@ -364,7 +364,7 @@ then append the following to the end of the file:
 
 ```sh
 # Autostart systemd default session on tty1
-if [[ "$(tty)" == '/dev/tty1' ]] then
+if [[ "$(tty)" == '/dev/tty1' ]] ; then
 	exec startx
 fi
 ```
