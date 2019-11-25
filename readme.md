@@ -127,12 +127,7 @@ Add your keymap:
 KEYMAP=sv-latin1
 ```
 
-~~Remove localtime:
-```
-rm /etc/localtime
-```
-~~
-localtime is no longer created by the system
+`localtime` is no longer created by the system
 
 Symlink your desired timezone instead:
 ```
