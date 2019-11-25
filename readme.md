@@ -97,8 +97,8 @@ nvim /etc/locale.gen
 Uncomment the locale(s) you want to enable.
 My locales include:
 ```
-sv_SE.UTF8 UTF-8
-en_GB.UTF8 UTF-8
+sv_SE.UTF-8 UTF-8
+en_GB.UTF-8 UTF-8
 ```
 Then generate them:
 ```
@@ -106,8 +106,8 @@ locale-gen
 ```
 Set your primary language:
 ```sh
-echo LANG=en_GB.UTF8 > /etc/locale.cfg
-export LANG=en_GB.UTF8
+echo LANG=en_GB.UTF-8 > /etc/locale.conf
+export LANG=en_GB.UTF-8
 ```
 
 Find your language code:
@@ -127,10 +127,13 @@ Add your keymap:
 KEYMAP=sv-latin1
 ```
 
-Remove localtime:
+~~Remove localtime:
 ```
 rm /etc/localtime
 ```
+~~
+localtime is no longer created by the system
+
 Symlink your desired timezone instead:
 ```
 ln -s /usr/share/zoneinfo/Europe/Stockholm /etc/localtime
