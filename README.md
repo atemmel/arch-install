@@ -43,7 +43,6 @@ Select free space, create partitions as needed.
 (I don't do swapfiles.)
 You need at least one primary partition intended for day-to-day-usage and one marked as boot (~512MB, set type to EFI).
 When satisfied, press write, type yes and then exit `cfdisk`.
-Repeat this process for all drives you wish to partition.
 
 Check drives again, sdx1 and sdx2 should now appear:
 
