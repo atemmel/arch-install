@@ -12,7 +12,15 @@ Check internet status:
 ping google.com
 ```
 
-If the ping is successful, you may proceed. If you need a wireless connection, use `networkmanager` for the time being
+If the ping is successful, you may proceed. If you need a wireless connection, use `iwctl` for the time being
+
+```
+iwctl
+device list
+station *device* scan
+station *device* get-networks
+station *device* connect *ssid*
+```
 
 Check drives:
 
@@ -28,16 +36,16 @@ cfdisk /dev/sdx
 
 Where x is replaced by the device to partition.
 
-Choose gpt for hdd > 2TB or if using UEFI, else use DOS
+Choose gpt, always ~~for hdd > 2TB or if using UEFI, else use DOS~~
 (Source: https://unix.stackexchange.com/questions/235467/arch-linux-cfdisk-asking-for-disk-label-type)
 
 Select free space, create partitions as needed.
 (I don't do swapfiles.)
-You need at least one primary partition with the bootable flag and type set to Linux.
+You need at least one primary partition intended for day-to-day-usage and one marked as boot (~512MB, set type to EFI).
 When satisfied, press write, type yes and then exit `cfdisk`.
 Repeat this process for all drives you wish to partition.
 
-Check drives again, sdx1 should now appear:
+Check drives again, sdx1 and sdx2 should now appear:
 
 ```
 lsblk
@@ -46,29 +54,29 @@ lsblk
 Create file systems:
 
 ```sh
+# main partition
 mkfs.ext4 /dev/sdxy
+
+# boot partition
+mkfs.fat -F32 /dev/sdxy
 ```
 
 Where x is replaced by the device, and y is replaced by the partition number.
 
-Create and enable swap (if appropriate):
-
+Mount drives:
 ```
-mkswap /dev/sdxy
-swapon /dev/sdxy
-```
-
-Mount main drive:
-```
+# main partition
 mount /dev/sdxy /mnt
+# boot partition
+mkdir /mnt/boot
+mount /dev/sdxy
 ```
+
 
 Run installation script:
 ```sh
-pacstrap -i /mnt base base-devel
+pacstrap -i /mnt base base-devel linux linux-firmware
 ```
-
-Select `systemd-resolv` if you get the option to do so.
 
 Go and make some chocolate, this might take a while.
 
@@ -87,7 +95,7 @@ Your prompt should now look a bit different.
 
 Install vim with added bloat, completion for bash, and finally, git:
 ```
-pacman -S neovim bash-completion git
+pacman -S nano bash-completion git iwd
 ```
 
 Enable your locale(s) of choice:
@@ -139,49 +147,19 @@ hwclock --systohc
 ```
 Set hostname:
 ```sh
+# replace "Hostname" with what you wish to name your computer
 echo Hostname > etc/hostname
 ```
+
 Edit hosts:
 ```
-nvim /etc/hosts
+nano /etc/hosts
 ```
 When done, it should look something like this:
 ```
 #	<ip-address>	<hostname.domain.org>	<hostname>
 	127.0.0.1		localhost.localdomain	localhost	Hostname
 	::1				localhost.localdomain	localhost	Hostname
-```
-
-This is where you install your network manager of choice, for me, that is `connman`.
-Miss this step and you'll have to `chroot` in again unless you got a wired connection.
-```
-pacman -S wpa-supplicant
-```
-I need to install this beforehand as a wifi dependency for connman
-```
-pacman -S connman
-```
-If you are met with a invalid or corrupted package, execute:
-```sh
-pacman-key --list-sigs Lastname # pipe this through grep once you know their name
-```
-Find the appropriate user's key and delete it:
-```
-pacman-key --delete XXXXXXXXXXXXXXXX
-```
-Then rebuild the keyring:
-```
-pacman-key --populate archlinux
-```
-And then, try installing the network manager once more.
-
-Once the manager is installed, you need to enable it with systemctl. First find the name of the service with:
-```
-systemctl list-unit-files
-```
-And then enable it if it wasn't already:
-```
-systemctl enable connman.service
 ```
 
 Create ramdisk environment:
@@ -196,28 +174,35 @@ Set root password:
 passwd
 ```
 
-Install grub and os prober:
+Setup systemctl-boot
 ```
-pacman -S grub os-prober
+bootctl install
 ```
-Run grub-install on your boot drive:
-```
-grub-install --target=i386-pc --recheck /dev/sdx
-```
-If you recieve 'Installation finished. No error reported.' you're golden.
 
-Create grub config:
+Create new boot entry (this file must not contain tabs, use spaces instead)
 ```
-grub-mkconfig -o /boot/grub/grub.cfg
+nano /boot/loader/entries/arch.conf
 ```
-Here you'll get a warning `'Failed to connect to lvmetad'`.
-This is because you ran grub from `chroot`.
-Once again, no need to worry.
+```
+title 	Arch Linux
+linux	/vmlinuz-linux
+initrd	/initramfs-linux.img
+options	root=/dev/sdxy rw
+```
+
+Edit bootloader to include default entry
+```
+nano /boot/loader/loader.conf
+```
+```
+default arch-*
+```
 
 Now shutdown the pc:
 ```sh
-umount /dev/sdxy
 exit
+umount /dev/sdxy
+umount /dev/sdxy
 shutdown -P now
 ```
 
@@ -228,11 +213,13 @@ If everything works as it's supposed to, you'll now be able to log in as the use
 If it doesn't, mount the installation media again and jump back into the main partition:
 ```
 mount /dev/sdxy /mnt
+mount /dev/sdxy /mnt/boot
 arch-chroot /mnt /bin/bash
 ```
-Rerun the last two `grub` steps. It should work now.
 
 ### Step 3: Customize the system
+
+(You may need to revisit iwctl again)
 
 Create your user account and set password:
 ```sh
@@ -242,7 +229,7 @@ passwd temmel
 
 Set up user rights:
 ```
-visudo
+EDITOR=nano visudo
 ```
 Uncomment the line that looks like:
 ```
@@ -272,14 +259,13 @@ rm -rf .git dotfiles
 
 Install basic software:
 ```
-sudo pacman -S i3-gaps rofi xorg xorg-xinit rxvt-unicode compton dunst mpd ncmpcpp ranger neofetch youtube-dl w3m feh imlib2 pulseaudio pavucontrol python-neovim zip unzip unrar firefox zathura valgrind
+sudo pacman -S i3-gaps rofi xorg xorg-xinit kitty dunst mpd ncmpcpp neofetch feh pulseaudio pavucontrol zip unzip unrar firefox zathura
 ```
 
-Download and install `aurman` so we can install more software:
+Download and install `yay` so we can install more software:
 ```sh
-git clone https://aur.archlinux.org/aurman.git
-cd aurman
-gpg --recv-keys 465022E743D71E39
+git clone https://aur.archlinux.org/yay.git
+cd yay
 makepkg -si
 cd ../;rm -rf aurman
 ```
@@ -292,55 +278,6 @@ sudo pacman -S xf86-video-vesa
 sudo pacman -S xf86-video-intel
 sudo pacman -S nvidia
 sudo nvidia-xconfig
-```
-
-Download and install fonts:
-```sh
-# Enable bitmap fonts:
-sudo rm /etc/fonts/conf.d/10*
-
-# Download the main font:
-git clone https://github.com/NerdyPepper/scientifica.git
-
-cp scientifica/regular/scientifica-11.bdf  .local/share/fonts/
-cp scientifica/bold/scientificaBold-11.bdf .local/share/fonts/
-
-# Download generic fonts
-aurman -S ttf-ms-fonts
-
-# Rebuild font cache:
-fc-cache
-# Check that it is installed with:
-fc-list | grep scientifica
-
-# Now for the icon font:
-aurman -S nerd-fonts-complete
-# This is a 2 GB install, might take some time.
-```
-
-Install more software:
-```
-aurman -S python-pywal flameshot polybar pyenv unclutter-xfixes-git
-```
-
-Install `discord`:
-```
-aurman -S discord
-```
-`libc++abi` may or may not install at first attempt, the key is sometimes hard to get verified. (No idea why this is.)
-Stay persistent, and try again later, this is why I install `discord` in a separate command.
-Furthermore, `libc++abi` runs almost 6K tests on installation, meaning it can take a while to install. Do this last.
-
-If it absolutely refuses to work, clone it and build it without tests:
-```sh
-git clone https://aur.archlinux.org/libc++.git
-cd libc++
-makepkg -si --nocheck
-cd ../
-rm -rf libc++
-
-# Now try installing it again:
-aurman -S discord
 ```
 
 Enter X:
@@ -366,16 +303,3 @@ if [[ "$(tty)" == '/dev/tty1' ]] ; then
 	exec startx
 fi
 ```
-
-### Chromium fonts
-Standard: Hack (Hack Nerd Font)
-
-Serif: Times New Roman
-
-Sans-serif: Arial
-
-Fixed-width: Monospace
-
-
-
-### Todo: urxvt resize font
