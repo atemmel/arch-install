@@ -69,7 +69,7 @@ Mount drives:
 mount /dev/sdxy /mnt
 # boot partition
 mkdir /mnt/boot
-mount /dev/sdxy
+mount /dev/sdxy /mnt/boot
 ```
 
 
