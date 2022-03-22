@@ -128,7 +128,7 @@ find /usr/share/kbd/keymaps/ | grep "sv"
 ```
 Make a mental note of it, and open vconsole.conf:
 ```
-nvim /etc/vconsole.conf
+nano /etc/vconsole.conf
 ```
 Add your keymap:
 ```
