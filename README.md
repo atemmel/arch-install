@@ -94,12 +94,12 @@ Your prompt should now look a bit different.
 
 Install vim with added bloat, completion for bash, and finally, git:
 ```
-pacman -S nano bash-completion git iwd
+pacman -S nano bash-completion git iwd networkmanager
 ```
 
 Enable your locale(s) of choice:
 ```
-nvim /etc/locale.gen
+nano /etc/locale.gen
 ```
 Uncomment the locale(s) you want to enable.
 My locales include:
