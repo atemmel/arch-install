@@ -94,7 +94,7 @@ Your prompt should now look a bit different.
 
 Install vim with added bloat, completion for bash, and finally, git:
 ```
-pacman -S nano bash-completion git iwd networkmanager
+pacman -S nano bash-completion git iwd networkmanager dhcpd
 ```
 
 Enable your locale(s) of choice:
@@ -195,6 +195,13 @@ nano /boot/loader/loader.conf
 ```
 ```
 default arch-*
+```
+
+Enable services
+```
+systemctl enable iwd.service
+systemctl enable resolved.service
+systemctl enable dhcpcd.service
 ```
 
 Now shutdown the pc:
